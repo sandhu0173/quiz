@@ -93,8 +93,42 @@ class MenuController extends BaseController
         }
     ]
      */
-
+    private function children($parent_id)
+    {
+        $result=[];
+        if($parent_id)
+        {
+            $menus=MenuItem::where('parent_id',$parent_id)->get();
+            foreach($menus as $menu)
+            {
+                $data['id']=$menu->id;
+                $data['name']=$menu->name;
+                $data['url']=$menu->url;
+                $data['parent_id']=$menu->parent_id;
+                $data['created_at']=$menu->created_at;
+                $data['updated_at']=$menu->updated_at;
+                $data['children']=$this->children($menu->id);
+                $result[]=$data;
+            }
+            
+        }
+        return $result;
+    }
     public function getMenuItems() {
-        throw new \Exception('implement in coding task 3');
+
+        $menus=MenuItem::whereNull('parent_id')->get();
+        foreach($menus as $menu)
+        {
+            $data['id']=$menu->id;
+            $data['name']=$menu->name;
+            $data['url']=$menu->url;
+            $data['parent_id']=$menu->parent_id;
+            $data['created_at']=$menu->created_at;
+            $data['updated_at']=$menu->updated_at;
+            $data['children']=$this->children($menu->id);
+            $result[]=$data;
+        }
+        return response()->json($result);
+        //throw new \Exception('implement in coding task 3');
     }
 }

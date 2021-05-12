@@ -102,7 +102,8 @@ class EventsController extends BaseController
         $result=[];
         foreach($events as $event)
         {
-            $data['name']=$event->evname;
+            $data['id']=$event->id;
+            $data['name']=$event->name;
             $data['created_at']=$event->created_at;
             $data['updated_at']=$event->updated_at;
             foreach($event->workshops as $workshop)
@@ -196,6 +197,7 @@ class EventsController extends BaseController
         $result=[];
         foreach($events as $event)
         {
+            $data['id']=$event->id;
             $data['name']=$event->evname;
             $data['created_at']=$event->created_at;
             $data['updated_at']=$event->updated_at;
