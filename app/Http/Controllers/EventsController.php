@@ -99,17 +99,20 @@ class EventsController extends BaseController
     public function getEventsWithWorkshops() {
         //throw new \Exception('implement in coding task 1');
         $events=Event::all();
-        
+        $result=[];
         foreach($events as $event)
         {
-            $data[]=$event;
+            $data['name']=$event->evname;
+            $data['created_at']=$event->created_at;
+            $data['updated_at']=$event->updated_at;
             foreach($event->workshops as $workshop)
             {
                 $data['workshop']=$workshop;
             }
+            $result[]=$data;
         }
         
-        return response()->json([$data]);
+        return response()->json([$result]);
     }
 
 
@@ -188,6 +191,23 @@ class EventsController extends BaseController
      */
 
     public function getFutureEventsWithWorkshops() {
-        throw new \Exception('implement in coding task 2');
+        $date=date('Y-m-d H:i:s');
+        $events=Event::select('events.*','events.name as evname','workshops.*')->join('workshops','workshops.event_id','events.id')->where('workshops.start','>',$date)->get();
+        $result=[];
+        foreach($events as $event)
+        {
+            $data['name']=$event->evname;
+            $data['created_at']=$event->created_at;
+            $data['updated_at']=$event->updated_at;
+
+            foreach($event->workshops as $workshop)
+            {
+                $data['workshop']=$workshop;
+            }
+            $result[]=$data;
+        }
+        
+        return response()->json([$result]);
+        //throw new \Exception('implement in coding task 2');
     }
 }
